@@ -1,8 +1,8 @@
-import { getDocs, collection } from "firebase/firestore";
-
 import { db } from "@/src/core/firebase/client";
-import { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { router } from "expo-router";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { Button, Text, View } from "react-native";
 
 export default function EventsList() {
   const [events, setEvents] = useState<any[]>([]);
@@ -27,6 +27,10 @@ export default function EventsList() {
         <View key={event.id}>
           <Text>{event.title}</Text>
           <Text>{event.description}</Text>
+          <Button
+            title="View Details"
+            onPress={() => router.push(`/events/${event.id}`)}
+          />
         </View>
       ))}
     </View>
