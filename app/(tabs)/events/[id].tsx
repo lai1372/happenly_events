@@ -1,8 +1,8 @@
 import { db } from "@/src/core/firebase/client";
-import { useLocalSearchParams } from "expo-router";
-import { doc, getDoc } from "firebase/firestore";
+import { router, useLocalSearchParams } from "expo-router";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Button, Image, Text, View } from "react-native";
 
 export default function EventDetails() {
   const [event, setEvent] = useState<any>(null);
@@ -40,6 +40,11 @@ export default function EventDetails() {
         style={{ width: 300, height: 300 }}
         source={{ uri: event.imageUrl }}
       />
+      <Button title="Delete Event" onPress={() => {
+        deleteDoc(doc(db, "events", event.id));
+        setEvent(null);
+        router.replace("/events")
+      }} />
     </View>
   );
 }
