@@ -40,11 +40,20 @@ export default function EventDetails() {
         style={{ width: 300, height: 300 }}
         source={{ uri: event.imageUrl }}
       />
-      <Button title="Delete Event" onPress={() => {
-        deleteDoc(doc(db, "events", event.id));
-        setEvent(null);
-        router.replace("/events")
-      }} />
+      <Button
+        title="Delete Event"
+        onPress={() => {
+          deleteDoc(doc(db, "events", event.id));
+          setEvent(null);
+          router.replace("/events");
+        }}
+      />
+      <Button
+        title="Edit Event"
+        onPress={() => {
+          router.push(`/events/${event.id}/edit`);
+        }}
+      />
     </View>
   );
 }
