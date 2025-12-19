@@ -1,4 +1,5 @@
 import { db } from "@/src/core/firebase/client";
+import * as Calendar from "expo-calendar";
 import { router, useLocalSearchParams } from "expo-router";
 import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -30,6 +31,34 @@ export default function EventDetails() {
     return <Text>Loading...</Text>;
   }
 
+  async function addEventToCalendar() {
+    try {
+      const perm = await Calendar.requestCalendarPermissionsAsync();
+      if (perm.status !== "granted") {
+        throw new Error("Calendar permission not granted.");
+      }
+
+      const calendars = await Calendar.getCalendarsAsync(
+        Calendar.EntityTypes.EVENT
+      );
+
+      const writable = calendars.find((c) => c.allowsModifications);
+      if (!writable) {
+        throw new Error(
+          "No writable event calendar found. Enable an iCloud/local calendar in iOS Calendar."
+        );
+      }
+      await Calendar.createEventAsync(writable.id, {
+        title: event.title,
+        startDate: event.date.toDate(),
+        endDate: new Date(event.date.toDate().getTime() + 60 * 60 * 1000),
+        location: event.location,
+      });
+    } catch (e) {
+      console.error("Failed to add event to calendar", e);
+    }
+  }
+
   return (
     <View key={event.id}>
       <Text>{event.title}</Text>
@@ -52,6 +81,12 @@ export default function EventDetails() {
         title="Edit Event"
         onPress={() => {
           router.push(`/events/${event.id}/edit`);
+        }}
+      />
+      <Button
+        title="Add Event to Calendar"
+        onPress={() => {
+          addEventToCalendar();
         }}
       />
     </View>
