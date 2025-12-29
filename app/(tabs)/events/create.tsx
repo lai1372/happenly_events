@@ -5,7 +5,6 @@ import {
   getDocs,
   query,
   serverTimestamp,
-  Timestamp,
 } from "firebase/firestore";
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Button, ScrollView, Text, TextInput, View } from "react-native";
@@ -21,11 +20,14 @@ export default function CreateEventScreen() {
   const [imageUrl, setImageUrl] = useState("");
 
   const [dateStr, setDateStr] = useState("");
+  const [dateError, setDateError] = useState<string | null>(null);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryId, setCategoryId] = useState<string>("");
 
   const [saving, setSaving] = useState(false);
+
+  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
   useEffect(() => {
     async function loadCategories() {
@@ -45,40 +47,26 @@ export default function CreateEventScreen() {
   }, []);
 
   const canSubmit = useMemo(() => {
+    const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+    const isValidDateFormat = (date: string) => dateRegex.test(date);
+
     return (
       title.trim().length > 0 &&
       location.trim().length > 0 &&
-      dateStr.trim().length > 0 &&
+      isValidDateFormat(dateStr) &&
       categoryId.trim().length > 0 &&
       !saving
     );
   }, [title, location, dateStr, categoryId, saving]);
 
-  function parseDateToTimestamp(input: string): Timestamp | null {
-    const m = input.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (!m) return null;
-    const year = Number(m[1]);
-    const month = Number(m[2]); // 1-12
-    const day = Number(m[3]);
-    const dt = new Date(year, month - 1, day, 12, 0, 0);
-    if (Number.isNaN(dt.getTime())) return null;
-    return Timestamp.fromDate(dt);
-  }
-
   async function onCreate() {
-    const ts = parseDateToTimestamp(dateStr.trim());
-    if (!ts) {
-      Alert.alert("Invalid date", "Use format YYYY-MM-DD (e.g. 2026-01-20).");
-      return;
-    }
-
     setSaving(true);
     try {
       const docRef = await addDoc(collection(db, "events"), {
         title: title.trim(),
         description: description.trim() || "",
         location: location.trim(),
-        date: ts,
+        date: dateStr.trim(),
         categoryId,
         imageUrl: imageUrl.trim() || "",
         createdAt: serverTimestamp(),
@@ -126,9 +114,26 @@ export default function CreateEventScreen() {
       <TextInput
         value={dateStr}
         onChangeText={setDateStr}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 12,
+          borderColor: dateError ? "red" : "#ccc",
+        }}
+        onBlur={() => {
+          if (dateStr && !dateRegex.test(dateStr)) {
+            setDateError("Date must be in format YYYY-MM-DD");
+          } else {
+            setDateError(null);
+          }
+        }}
         placeholder="e.g. 2026-01-20"
-        style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
+        keyboardType="numbers-and-punctuation"
       />
+
+      {dateError && (
+        <Text style={{ color: "red", marginTop: 4 }}>{dateError}</Text>
+      )}
 
       <Text>Category *</Text>
       <View style={{ gap: 8 }}>

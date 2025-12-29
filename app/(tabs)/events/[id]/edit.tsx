@@ -15,6 +15,9 @@ export default function EditEvent() {
   });
   const [loading, setLoading] = useState(true);
 
+    const [dateError, setDateError] = useState<string | null>(null);
+    const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
   useEffect(() => {
     async function fetchEvent() {
       try {
@@ -71,13 +74,30 @@ export default function EditEvent() {
           style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
         />
 
-        <Text>Date</Text>
-        <TextInput
-          placeholder="Date"
-          value={eventData.date}
-          onChangeText={(text) => setEventData({ ...eventData, date: text })}
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
+<Text>Date (YYYY-MM-DD) *</Text>
+      <TextInput
+        value={eventData.date}
+        onChangeText={(text) => setEventData({ ...eventData, date: text })}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 12,
+          borderColor: dateError ? "red" : "#ccc",
+        }}
+        onBlur={() => {
+          if (eventData.date && !dateRegex.test(eventData.date)) {
+            setDateError("Date must be in format YYYY-MM-DD");
+          } else {
+            setDateError(null);
+          }
+        }}
+        placeholder="e.g. 2026-01-20"
+        keyboardType="numbers-and-punctuation"
+      />
+
+      {dateError && (
+        <Text style={{ color: "red", marginTop: 4 }}>{dateError}</Text>
+      )}
 
         <Text>Location</Text>
         <TextInput
