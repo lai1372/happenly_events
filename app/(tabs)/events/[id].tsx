@@ -75,7 +75,10 @@ export default function EventDetails() {
       <Image
         style={{ width: 300, height: 300 }}
         source={{ uri: event.imageUrl }}
+        accessible={true}
+        accessibilityLabel={event.imageDescription}
       />
+
       <Button
         title="Delete Event"
         onPress={() => {
