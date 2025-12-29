@@ -67,7 +67,12 @@ export default function EventDetails() {
   }
 
   return (
-    <View key={event.id}>
+    <View
+      accessible
+      accessibilityRole="summary"
+      accessibilityLabel={`${event.title}. ${event.description}. ${event.date}. ${event.location}.`}
+      key={event.id}
+    >
       <Text>{event.title}</Text>
       <Text>{event.description}</Text>
       <Text>{event.date}</Text>
