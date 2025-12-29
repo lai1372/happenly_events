@@ -48,10 +48,17 @@ export default function EventDetails() {
           "No writable event calendar found. Enable an iCloud/local calendar in iOS Calendar."
         );
       }
+      const [y, m, d] = event.date.split("-").map(Number);
+
+      const start = new Date(y, m - 1, d);
+
+      const end = new Date(y, m - 1, d + 1);
+
       await Calendar.createEventAsync(writable.id, {
         title: event.title,
-        startDate: event.date.toDate(),
-        endDate: new Date(event.date.toDate().getTime() + 60 * 60 * 1000),
+        startDate: start,
+        endDate: end,
+        allDay: true,
         location: event.location,
       });
     } catch (e) {
@@ -63,7 +70,7 @@ export default function EventDetails() {
     <View key={event.id}>
       <Text>{event.title}</Text>
       <Text>{event.description}</Text>
-      <Text>{event.date.toDate().toString()}</Text>
+      <Text>{event.date}</Text>
       <Text>{event.location}</Text>
       <Image
         style={{ width: 300, height: 300 }}
