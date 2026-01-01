@@ -24,11 +24,18 @@ export default function EventsList() {
   return (
     <View>
       {events.map((event) => (
-        <View key={event.id}>
-          <Text>{event.title}</Text>
-          <Text>{event.description}</Text>
+        <View
+          key={event.id}
+          accessible
+          accessibilityRole="summary"
+          accessibilityLabel={`${event.title}. ${event.description}.`}
+        >
+          <Text accessible={false}>{event.title}</Text>
+          <Text accessible={false}>{event.description}</Text>
+
           <Button
-            title="View Details"
+            title="View details"
+            accessibilityLabel={`View details for ${event.title}`}
             onPress={() => router.push(`/events/${event.id}`)}
           />
         </View>

@@ -18,6 +18,7 @@ export default function CreateEventScreen() {
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [imageDescription, setImageDescription] = useState("");
 
   const [dateStr, setDateStr] = useState("");
   const [dateError, setDateError] = useState<string | null>(null);
@@ -160,7 +161,13 @@ export default function CreateEventScreen() {
         autoCapitalize="none"
         style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
       />
-
+      <Text>Image description (50 characters max)</Text>
+      <TextInput
+        placeholder="Image description"
+        value={imageDescription}
+        onChangeText={setImageDescription}
+        style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
+      />
       <Button
         title={saving ? "Saving..." : "Create event"}
         onPress={onCreate}
