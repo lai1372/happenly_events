@@ -1,23 +1,19 @@
-import { db } from "@/src/core/firebase/client";
 import { router } from "expo-router";
-import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Button, Text, View } from "react-native";
+import { getAllEvents } from "./api";
+import type { Event } from "./models";
+
+type EventWithId = Event & { id: string };
 
 export default function EventsList() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<EventWithId[]>([]);
 
+  async function loadEvents() {
+    const events = await getAllEvents();
+    setEvents(events);
+  }
   useEffect(() => {
-    async function loadEvents() {
-      try {
-        const snap = await getDocs(collection(db, "events"));
-        const evts = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
-        console.log("Loaded events:", evts);
-        setEvents(evts);
-      } catch (e: any) {
-        console.error("Failed to load events", e);
-      }
-    }
     loadEvents();
   }, []);
 

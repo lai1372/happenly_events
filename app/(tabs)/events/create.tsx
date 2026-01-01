@@ -1,17 +1,9 @@
 import { router } from "expo-router";
-import {
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  serverTimestamp,
-} from "firebase/firestore";
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Button, ScrollView, Text, TextInput, View } from "react-native";
+import { createEvent, getAllCategories } from "./api";
+import type { Category } from "./models";
 
-import { db } from "@/src/core/firebase/client";
-
-type Category = { id: string; name: string };
 
 export default function CreateEventScreen() {
   const [title, setTitle] = useState("");
@@ -33,15 +25,10 @@ export default function CreateEventScreen() {
   useEffect(() => {
     async function loadCategories() {
       try {
-        const snap = await getDocs(query(collection(db, "categories")));
-        const cats = snap.docs.map((d) => ({
-          id: d.id,
-          ...(d.data() as { name: string }),
-        })) as Category[];
+        const cats = await getAllCategories();
         setCategories(cats);
-        if (!categoryId && cats.length) setCategoryId(cats[0].id);
-      } catch (e: any) {
-        console.error("Failed to load categories", e);
+      } catch (e) {
+        console.error(e);
       }
     }
     loadCategories();
@@ -63,14 +50,14 @@ export default function CreateEventScreen() {
   async function onCreate() {
     setSaving(true);
     try {
-      const docRef = await addDoc(collection(db, "events"), {
-        title: title.trim(),
-        description: description.trim() || "",
-        location: location.trim(),
-        date: dateStr.trim(),
+      const docRef = await createEvent({
+        title,
+        description,
+        location,
+        date: dateStr,
         categoryId,
-        imageUrl: imageUrl.trim() || "",
-        createdAt: serverTimestamp(),
+        imageUrl,
+        imageDescription,
       });
 
       Alert.alert("Event created", `ID: ${docRef.id}`);
