@@ -1,28 +1,21 @@
-import { db } from "@/src/core/firebase/client";
 import * as Calendar from "expo-calendar";
 import { router, useLocalSearchParams } from "expo-router";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Button, Image, Text, View } from "react-native";
+import { deleteEvent, getEventById } from "./api";
+import type { Event } from "./models";
+
+type EventWithId = Event & { id: string };
 
 export default function EventDetails() {
-  const [event, setEvent] = useState<any>(null);
+  const [event, setEvent] = useState<EventWithId | null>(null);
   const id = useLocalSearchParams().id;
 
   useEffect(() => {
     async function loadEvent() {
-      try {
-        const docRef = getDoc(doc(db, "events", id as string));
-        const docSnap = await docRef;
-        console.log("Document snapshot:", docSnap.data());
-        if (docSnap.exists()) {
-          setEvent({ id: docSnap.id, ...(docSnap.data() as any) });
-        } else {
-          console.log("No such document!");
-        }
-      } catch (e: any) {
-        console.error("Failed to load event", e);
-      }
+      const evt = await getEventById(id as string);
+      if (evt) setEvent(evt);
+      else console.log("No such document!");
     }
     loadEvent();
   }, [id]);
@@ -32,6 +25,7 @@ export default function EventDetails() {
   }
 
   async function addEventToCalendar() {
+    if (!event) return;
     try {
       const perm = await Calendar.requestCalendarPermissionsAsync();
       if (perm.status !== "granted") {
@@ -86,8 +80,8 @@ export default function EventDetails() {
 
       <Button
         title="Delete Event"
-        onPress={() => {
-          deleteDoc(doc(db, "events", event.id));
+        onPress={async () => {
+          await deleteEvent(event.id);
           setEvent(null);
           router.replace("/events");
         }}

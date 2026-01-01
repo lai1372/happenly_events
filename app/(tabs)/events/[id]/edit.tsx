@@ -1,49 +1,66 @@
 import { db } from "@/src/core/firebase/client";
 import { router, useLocalSearchParams } from "expo-router";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Button, ScrollView, Text, TextInput, View } from "react-native";
+import { getEventById } from "../api";
+import type { Event } from "../models";
 
 export default function EditEvent() {
-  const eventId = useLocalSearchParams().id;
-  const [eventData, setEventData] = useState<any>({
+  const params = useLocalSearchParams();
+  const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
+
+  console.log("Editing event with ID:", eventId);
+  const [eventData, setEventData] = useState<Event>({
     title: "",
     description: "",
     date: "",
     location: "",
+    categoryId: "",
     imageUrl: "",
     imageDescription: "",
   });
+
   const [loading, setLoading] = useState(true);
 
   const [dateError, setDateError] = useState<string | null>(null);
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
   useEffect(() => {
+    if (!eventId) return;
+
     async function fetchEvent() {
       try {
-        const docRef = getDoc(doc(db, "events", eventId as string));
-        const docSnap = await docRef;
-        if (docSnap.exists()) {
-          setEventData(docSnap.data());
+        const evt = await getEventById(eventId);
+        if (evt) {
+          const { id, ...docFields } = evt;
+          setEventData(docFields);
         } else {
           console.log("No such document!");
         }
-      } catch (e: any) {
-        console.error("Failed to load event", e);
+      } catch (e) {
+        console.error("Failed to fetch event", e);
       } finally {
         setLoading(false);
       }
     }
+
     fetchEvent();
   }, [eventId]);
 
   const handleSave = async () => {
     try {
-      const eventRef = doc(db, "events", eventId as string);
-      await updateDoc(eventRef, eventData);
-      router.replace(`/events/${eventId}`);
-    } catch (e: any) {
+      await updateDoc(doc(db, "events", eventId as string), {
+        title: eventData.title.trim(),
+        description: eventData.description?.trim(),
+        location: eventData.location.trim(),
+        date: eventData.date.trim(),
+        categoryId: eventData.categoryId.trim(),
+        imageUrl: eventData.imageUrl?.trim(),
+        imageDescription: eventData.imageDescription?.trim(),
+      });
+      router.push(`/events/${eventId}`);
+    } catch (e) {
       console.error("Failed to update event", e);
     }
   };
