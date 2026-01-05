@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
-import { getDoc, getDocs } from "firebase/firestore";
+import { getDoc, getDocs, addDoc } from "firebase/firestore";
 
-import { getAllEvents, getEventById } from "../app/(tabs)/events/api";
+import { getAllEvents, getEventById, createEvent } from "../app/(tabs)/events/api";
 
 // Mock Firebase Firestore functions
 jest.mock("firebase/firestore", () => ({
@@ -118,5 +118,38 @@ describe("events api", () => {
       imageUrl: "https://example.com/event-a.jpg",
       imageDescription: "Crowd at a live music event",
     });
+  });
+
+  test("createEvent adds a new event document", async () => {
+    // Arrange 
+    const newEvent = {
+      title: "Event C",
+      description: "A sample description for Event C",
+      location: "Bristol",
+      date: "2026-05-10",
+      categoryId: "theatre",
+      imageUrl: "https://example.com/event-c.jpg",
+      imageDescription: "Actors performing on stage",
+    };
+    (addDoc as jest.Mock).mockResolvedValue({ id: "e3" });
+
+    // Act
+    const result = await createEvent(newEvent);
+
+    // Assert
+    expect(addDoc).toHaveBeenCalledTimes(1);
+    expect(addDoc).toHaveBeenCalledWith(
+      { __type: "collectionRef" },
+      {
+        title: "Event C",
+        description: "A sample description for Event C",
+        location: "Bristol",
+        date: "2026-05-10",
+        categoryId: "theatre",
+        imageUrl: "https://example.com/event-c.jpg",
+        imageDescription: "Actors performing on stage",
+      }
+    );
+    expect(result).toEqual({ id: "e3" });
   });
 });
