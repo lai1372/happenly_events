@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
-import { getDocs } from "firebase/firestore";
+import { getDoc, getDocs } from "firebase/firestore";
 
-import { getAllEvents } from "../app/(tabs)/events/api";
+import { getAllEvents, getEventById } from "../app/(tabs)/events/api";
 
 // Mock Firebase Firestore functions
 jest.mock("firebase/firestore", () => ({
@@ -85,5 +85,38 @@ describe("events api", () => {
         imageDescription: "Gallery space with modern art",
       },
     ]);
+  });
+
+  test("getEvent returns event data for a given ID", async () => {
+    // Arrange
+    (getDoc as jest.Mock).mockResolvedValue({
+      exists: () => true,
+      id: "e1",
+      data: () => ({
+        title: "Event A",
+        description: "A sample description for Event A",
+        location: "London",
+        date: "2026-03-15",
+        categoryId: "music",
+        imageUrl: "https://example.com/event-a.jpg",
+        imageDescription: "Crowd at a live music event",
+      }),
+    });
+
+    // Act
+    const event = await getEventById("e1");
+
+    // Assert
+    expect(getDoc).toHaveBeenCalledTimes(1);
+    expect(event).toEqual({
+      id: "e1",
+      title: "Event A",
+      description: "A sample description for Event A",
+      location: "London",
+      date: "2026-03-15",
+      categoryId: "music",
+      imageUrl: "https://example.com/event-a.jpg",
+      imageDescription: "Crowd at a live music event",
+    });
   });
 });
