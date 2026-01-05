@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
-import { getDoc, getDocs, addDoc } from "firebase/firestore";
+import { getDoc, getDocs, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-import { getAllEvents, getEventById, createEvent } from "../app/(tabs)/events/api";
+import { getAllEvents, getEventById, createEvent, updateEvent, deleteEvent } from "../app/(tabs)/events/api";
 
 // Mock Firebase Firestore functions
 jest.mock("firebase/firestore", () => ({
@@ -151,5 +151,35 @@ describe("events api", () => {
       }
     );
     expect(result).toEqual({ id: "e3" });
+  });
+
+  test("updateEvent updates an existing event document", async () => {
+    // Arrange
+    const updatedData = {
+      title: "Updated Event A",
+      location: "Edinburgh",
+    };
+
+    // Act
+    await updateEvent("e1", updatedData);
+
+    // Assert
+    expect(updateDoc).toHaveBeenCalledTimes(1);
+    expect(updateDoc).toHaveBeenCalledWith(
+      { __type: "docRef" },
+      {
+        title: "Updated Event A",
+        location: "Edinburgh",
+      }
+    );
+  });
+
+  test("deleteEvent removes an event document", async () => {
+    // Act
+    await deleteEvent("e1");
+
+    // Assert
+    expect(deleteDoc).toHaveBeenCalledTimes(1);
+    expect(deleteDoc).toHaveBeenCalledWith({ __type: "docRef" });
   });
 });
