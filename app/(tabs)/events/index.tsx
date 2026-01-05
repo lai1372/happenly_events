@@ -17,6 +17,10 @@ export default function EventsList() {
     loadEvents();
   }, []);
 
+  if (events.length === 0) {
+    return <Text>No events found.</Text>;
+  }
+
   return (
     <View>
       {events.map((event) => (
