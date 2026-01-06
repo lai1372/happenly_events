@@ -11,6 +11,7 @@ import {
   Text,
   TextInput,
 } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getEventById } from "../api";
 import type { Event } from "../models";
 
@@ -78,87 +79,93 @@ export default function EditEvent() {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
-      <Surface style={{ padding: 16, borderRadius: 12 }} elevation={2}>
-        <Text variant="titleLarge" style={{ marginBottom: 16 }}>
-          Editing event: {eventData.title}
-        </Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 16 }}>
+        <Surface style={{ padding: 16, borderRadius: 12 }} elevation={2}>
+          <Text variant="titleLarge" style={{ marginBottom: 16 }}>
+            Editing event: {eventData.title}
+          </Text>
 
-        <TextInput
-          label="Title"
-          mode="outlined"
-          value={eventData.title}
-          onChangeText={(text) => setEventData({ ...eventData, title: text })}
-          style={{ marginBottom: 12 }}
-        />
+          <TextInput
+            label="Title"
+            mode="outlined"
+            value={eventData.title}
+            onChangeText={(text) => setEventData({ ...eventData, title: text })}
+            style={{ marginBottom: 12 }}
+          />
 
-        <TextInput
-          label="Description"
-          mode="outlined"
-          multiline
-          value={eventData.description}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, description: text })
-          }
-          style={{ marginBottom: 12 }}
-        />
-
-        <TextInput
-          label="Date (YYYY-MM-DD)"
-          mode="outlined"
-          value={eventData.date}
-          error={!!dateError}
-          onChangeText={(text) => setEventData({ ...eventData, date: text })}
-          onBlur={() => {
-            if (eventData.date && !dateRegex.test(eventData.date)) {
-              setDateError("Date must be in format YYYY-MM-DD");
-            } else {
-              setDateError(null);
+          <TextInput
+            label="Description"
+            mode="outlined"
+            multiline
+            value={eventData.description}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, description: text })
             }
-          }}
-          keyboardType="numbers-and-punctuation"
-        />
+            style={{ marginBottom: 12 }}
+          />
 
-        <HelperText type="error" visible={!!dateError}>
-          {dateError}
-        </HelperText>
+          <TextInput
+            label="Date (YYYY-MM-DD)"
+            mode="outlined"
+            value={eventData.date}
+            error={!!dateError}
+            onChangeText={(text) => setEventData({ ...eventData, date: text })}
+            onBlur={() => {
+              if (eventData.date && !dateRegex.test(eventData.date)) {
+                setDateError("Date must be in format YYYY-MM-DD");
+              } else {
+                setDateError(null);
+              }
+            }}
+            keyboardType="numbers-and-punctuation"
+          />
 
-        <Divider style={{ marginVertical: 16 }} />
+          <HelperText type="error" visible={!!dateError}>
+            {dateError}
+          </HelperText>
 
-        <TextInput
-          label="Location"
-          mode="outlined"
-          value={eventData.location}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, location: text })
-          }
-          style={{ marginBottom: 12 }}
-        />
+          <Divider style={{ marginVertical: 16 }} />
 
-        <TextInput
-          label="Image URL"
-          mode="outlined"
-          value={eventData.imageUrl}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, imageUrl: text })
-          }
-          style={{ marginBottom: 12 }}
-        />
+          <TextInput
+            label="Location"
+            mode="outlined"
+            value={eventData.location}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, location: text })
+            }
+            style={{ marginBottom: 12 }}
+          />
 
-        <TextInput
-          label="Image description (max 50 chars)"
-          mode="outlined"
-          value={eventData.imageDescription}
-          maxLength={50}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, imageDescription: text })
-          }
-        />
+          <TextInput
+            label="Image URL"
+            mode="outlined"
+            value={eventData.imageUrl}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, imageUrl: text })
+            }
+            style={{ marginBottom: 12 }}
+          />
 
-        <Button mode="contained" onPress={handleSave} style={{ marginTop: 24 }}>
-          Save Changes
-        </Button>
-      </Surface>
-    </ScrollView>
+          <TextInput
+            label="Image description (max 50 chars)"
+            mode="outlined"
+            value={eventData.imageDescription}
+            maxLength={50}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, imageDescription: text })
+            }
+          />
+
+          <Button
+            mode="contained"
+            onPress={handleSave}
+            style={{ marginTop: 24 }}
+          >
+            Save Changes
+          </Button>
+        </Surface>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

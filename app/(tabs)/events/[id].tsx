@@ -1,8 +1,9 @@
 import * as Calendar from "expo-calendar";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, View } from "react-native";
+import { Alert, Image, ScrollView, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { deleteEvent, getEventById } from "./api";
 import type { Event } from "./models";
 
@@ -85,46 +86,50 @@ export default function EventDetails() {
   }
 
   return (
-    <View
-      accessible
-      accessibilityRole="summary"
-      accessibilityLabel={`${event.title}. ${event.description}. ${event.date}. ${event.location}.`}
-      key={event.id}
-    >
-      <Card>
-        <Card.Title title={event.title} subtitle={event.date} />
-        <Card.Content>
-          <Text>{event.title}</Text>
-          <Text>{event.description}</Text>
-          <Text>{event.date}</Text>
-          <Text>{event.location}</Text>
-          <Image
-            style={{ width: 300, height: 300 }}
-            source={{ uri: event.imageUrl }}
-            accessible={true}
-            accessibilityLabel={event.imageDescription}
-          />
-          <Card.Actions>
-            <Button onPress={confirmDelete}>Delete Event</Button>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 16 }}>
+        <View
+          accessible
+          accessibilityRole="summary"
+          accessibilityLabel={`${event.title}. ${event.description}. ${event.date}. ${event.location}.`}
+          key={event.id}
+        >
+          <Card>
+            <Card.Title title={event.title} subtitle={event.date} />
+            <Card.Content>
+              <Text>{event.title}</Text>
+              <Text>{event.description}</Text>
+              <Text>{event.date}</Text>
+              <Text>{event.location}</Text>
+              <Image
+                style={{ width: 300, height: 300 }}
+                source={{ uri: event.imageUrl }}
+                accessible={true}
+                accessibilityLabel={event.imageDescription}
+              />
+              <Card.Actions>
+                <Button onPress={confirmDelete}>Delete Event</Button>
 
-            <Button
-              onPress={() => {
-                router.push(`/events/${event.id}/edit`);
-              }}
-            >
-              Edit Event
-            </Button>
+                <Button
+                  onPress={() => {
+                    router.push(`/events/${event.id}/edit`);
+                  }}
+                >
+                  Edit Event
+                </Button>
 
-            <Button
-              onPress={() => {
-                addEventToCalendar();
-              }}
-            >
-              Add to Calendar
-            </Button>
-          </Card.Actions>
-        </Card.Content>
-      </Card>
-    </View>
+                <Button
+                  onPress={() => {
+                    addEventToCalendar();
+                  }}
+                >
+                  Add to Calendar
+                </Button>
+              </Card.Actions>
+            </Card.Content>
+          </Card>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
