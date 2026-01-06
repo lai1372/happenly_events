@@ -2,7 +2,15 @@ import { db } from "@/src/core/firebase/client";
 import { router, useLocalSearchParams } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Button, ScrollView, Text, TextInput, View } from "react-native";
+import { ScrollView } from "react-native";
+import {
+  Button,
+  Divider,
+  HelperText,
+  Surface,
+  Text,
+  TextInput,
+} from "react-native-paper";
 import { getEventById } from "../api";
 import type { Event } from "../models";
 
@@ -70,38 +78,37 @@ export default function EditEvent() {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
-      <Text style={{ fontSize: 22, fontWeight: "600" }}>
-        Editing event: {eventData.title}
-      </Text>
-      <View>
-        <Text>Title</Text>
+    <ScrollView contentContainerStyle={{ padding: 16 }}>
+      <Surface style={{ padding: 16, borderRadius: 12 }} elevation={2}>
+        <Text variant="titleLarge" style={{ marginBottom: 16 }}>
+          Editing event: {eventData.title}
+        </Text>
+
         <TextInput
-          placeholder="Title"
+          label="Title"
+          mode="outlined"
           value={eventData.title}
           onChangeText={(text) => setEventData({ ...eventData, title: text })}
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
+          style={{ marginBottom: 12 }}
         />
-        <Text>Description</Text>
+
         <TextInput
-          placeholder="Description"
+          label="Description"
+          mode="outlined"
+          multiline
           value={eventData.description}
           onChangeText={(text) =>
             setEventData({ ...eventData, description: text })
           }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
+          style={{ marginBottom: 12 }}
         />
 
-        <Text>Date (YYYY-MM-DD) *</Text>
         <TextInput
+          label="Date (YYYY-MM-DD)"
+          mode="outlined"
           value={eventData.date}
+          error={!!dateError}
           onChangeText={(text) => setEventData({ ...eventData, date: text })}
-          style={{
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 12,
-            borderColor: dateError ? "red" : "#ccc",
-          }}
           onBlur={() => {
             if (eventData.date && !dateRegex.test(eventData.date)) {
               setDateError("Date must be in format YYYY-MM-DD");
@@ -109,44 +116,49 @@ export default function EditEvent() {
               setDateError(null);
             }
           }}
-          placeholder="e.g. 2026-01-20"
           keyboardType="numbers-and-punctuation"
         />
 
-        {dateError && (
-          <Text style={{ color: "red", marginTop: 4 }}>{dateError}</Text>
-        )}
+        <HelperText type="error" visible={!!dateError}>
+          {dateError}
+        </HelperText>
 
-        <Text>Location</Text>
+        <Divider style={{ marginVertical: 16 }} />
+
         <TextInput
-          placeholder="Location"
+          label="Location"
+          mode="outlined"
           value={eventData.location}
           onChangeText={(text) =>
             setEventData({ ...eventData, location: text })
           }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
+          style={{ marginBottom: 12 }}
         />
 
-        <Text>Image URL</Text>
         <TextInput
-          placeholder="Image URL"
+          label="Image URL"
+          mode="outlined"
           value={eventData.imageUrl}
           onChangeText={(text) =>
             setEventData({ ...eventData, imageUrl: text })
           }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
+          style={{ marginBottom: 12 }}
         />
-        <Text>Image description (50 characters max)</Text>
+
         <TextInput
-          placeholder="Image description"
+          label="Image description (max 50 chars)"
+          mode="outlined"
           value={eventData.imageDescription}
+          maxLength={50}
           onChangeText={(text) =>
             setEventData({ ...eventData, imageDescription: text })
           }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
         />
-        <Button title="Save Changes" onPress={handleSave} />
-      </View>
+
+        <Button mode="contained" onPress={handleSave} style={{ marginTop: 24 }}>
+          Save Changes
+        </Button>
+      </Surface>
     </ScrollView>
   );
 }
