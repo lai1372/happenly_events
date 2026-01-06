@@ -87,6 +87,20 @@ describe("events api", () => {
     ]);
   });
 
+  test("getAllEvents returns empty array when no documents", async () => {
+    // Arrange
+    (getDocs as jest.Mock).mockResolvedValue({
+      docs: [],
+    });
+
+    // Act
+    const events = await getAllEvents();
+
+    // Assert
+    expect(getDocs).toHaveBeenCalledTimes(1);
+    expect(events).toEqual([]);
+  });
+
   test("getEvent returns event data for a given ID", async () => {
     // Arrange
     (getDoc as jest.Mock).mockResolvedValue({
@@ -118,6 +132,20 @@ describe("events api", () => {
       imageUrl: "https://example.com/event-a.jpg",
       imageDescription: "Crowd at a live music event",
     });
+  });
+
+  test("getEvent returns null for non-existing ID", async () => {
+    // Arrange
+    (getDoc as jest.Mock).mockResolvedValue({
+      exists: () => false,
+    });
+
+    // Act
+    const event = await getEventById("nonexistent-id");
+
+    // Assert
+    expect(getDoc).toHaveBeenCalledTimes(1);
+    expect(event).toBeNull();
   });
 
   test("createEvent adds a new event document", async () => {
@@ -153,6 +181,26 @@ describe("events api", () => {
     expect(result).toEqual({ id: "e3" });
   });
 
+  test("createEvent throws error when addDoc fails", async () => {
+    // Arrange
+    const newEvent = {
+      title: "Event D",
+      description: "A sample description for Event D",
+      location: "Leeds",
+      date: "2026-06-20",
+      categoryId: "comedy",
+      imageUrl: "https://example.com/event-d.jpg",
+      imageDescription: "Comedian on stage",
+    };
+    (addDoc as jest.Mock).mockRejectedValue(new Error("Firestore addDoc error"));
+
+    // Act
+    await expect(createEvent(newEvent)).rejects.toThrow("Firestore addDoc error");
+
+    // Assert
+    expect(addDoc).toHaveBeenCalledTimes(1);
+  });
+
   test("updateEvent updates an existing event document", async () => {
     // Arrange
     const updatedData = {
@@ -174,6 +222,20 @@ describe("events api", () => {
     );
   });
 
+  test("updateEvent throws error when updateDoc fails", async () => {
+    // Arrange
+    const updatedData = {
+      title: "Updated Event B",
+    };
+    (updateDoc as jest.Mock).mockRejectedValue(new Error("Firestore updateDoc error"));
+
+    // Act
+    await expect(updateEvent("e2", updatedData)).rejects.toThrow("Firestore updateDoc error");
+
+    // Assert
+    expect(updateDoc).toHaveBeenCalledTimes(1);
+  });
+
   test("deleteEvent removes an event document", async () => {
     // Act
     await deleteEvent("e1");
@@ -181,5 +243,16 @@ describe("events api", () => {
     // Assert
     expect(deleteDoc).toHaveBeenCalledTimes(1);
     expect(deleteDoc).toHaveBeenCalledWith({ __type: "docRef" });
+  });
+
+  test("deleteEvent throws error when deleteDoc fails", async () => {
+    // Arrange
+    (deleteDoc as jest.Mock).mockRejectedValue(new Error("Firestore deleteDoc error"));
+
+    // Act
+    await expect(deleteEvent("e2")).rejects.toThrow("Firestore deleteDoc error");
+
+    // Assert
+    expect(deleteDoc).toHaveBeenCalledTimes(1);
   });
 });
