@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button, Image, Text, View } from "react-native";
 import { deleteEvent, getEventById } from "./api";
 import type { Event } from "./models";
+import { Alert } from "react-native";
 
 type EventWithId = Event & { id: string };
 
@@ -21,7 +22,30 @@ export default function EventDetails() {
   }, [id]);
 
   if (!event) {
-    return <Text>Loading...</Text>;
+    return <Text>No event found</Text>;
+  }
+
+  function confirmDelete() {
+    if (!event) return;
+    Alert.alert(
+      "Delete Event",
+      "Are you sure you want to delete this event?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await deleteEvent(event.id);
+            setEvent(null);
+            router.replace("/events");
+          },
+        },
+      ]
+    );
   }
 
   async function addEventToCalendar() {
@@ -80,12 +104,10 @@ export default function EventDetails() {
 
       <Button
         title="Delete Event"
-        onPress={async () => {
-          await deleteEvent(event.id);
-          setEvent(null);
-          router.replace("/events");
-        }}
+        onPress={confirmDelete}
       />
+
+
       <Button
         title="Edit Event"
         onPress={() => {

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { router } from "expo-router";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/src/core/firebase/client";
+import { login } from "./api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +11,7 @@ export default function Login() {
   async function onLogin() {
     setErr(null);
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
+      await login(email.trim(), password);
       router.replace("/");
     } catch (e: any) {
       setErr(e?.message ?? "Login failed");
