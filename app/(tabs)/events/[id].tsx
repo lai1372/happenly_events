@@ -1,7 +1,8 @@
 import * as Calendar from "expo-calendar";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Button, Image, Text, View } from "react-native";
+import { Alert, Image, View } from "react-native";
+import { Button, Card, Text } from "react-native-paper";
 import { deleteEvent, getEventById } from "./api";
 import type { Event } from "./models";
 
@@ -90,31 +91,38 @@ export default function EventDetails() {
       accessibilityLabel={`${event.title}. ${event.description}. ${event.date}. ${event.location}.`}
       key={event.id}
     >
-      <Text>{event.title}</Text>
-      <Text>{event.description}</Text>
-      <Text>{event.date}</Text>
-      <Text>{event.location}</Text>
-      <Image
-        style={{ width: 300, height: 300 }}
-        source={{ uri: event.imageUrl }}
-        accessible={true}
-        accessibilityLabel={event.imageDescription}
-      />
+      <Card>
+        <Card.Title title={event.title} subtitle={event.date} />
+        <Card.Content>
+          <Text>{event.title}</Text>
+          <Text>{event.description}</Text>
+          <Text>{event.date}</Text>
+          <Text>{event.location}</Text>
+          <Image
+            style={{ width: 300, height: 300 }}
+            source={{ uri: event.imageUrl }}
+            accessible={true}
+            accessibilityLabel={event.imageDescription}
+          />
+          <Button onPress={confirmDelete}>Delete Event</Button>
 
-      <Button title="Delete Event" onPress={confirmDelete} />
+          <Button
+            onPress={() => {
+              router.push(`/events/${event.id}/edit`);
+            }}
+          >
+            Edit Event
+          </Button>
 
-      <Button
-        title="Edit Event"
-        onPress={() => {
-          router.push(`/events/${event.id}/edit`);
-        }}
-      />
-      <Button
-        title="Add Event to Calendar"
-        onPress={() => {
-          addEventToCalendar();
-        }}
-      />
+          <Button
+            onPress={() => {
+              addEventToCalendar();
+            }}
+          >
+            Add to Calendar
+          </Button>
+        </Card.Content>
+      </Card>
     </View>
   );
 }

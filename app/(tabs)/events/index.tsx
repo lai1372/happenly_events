@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, Text, View } from "react-native";
+import { View } from "react-native";
+import { Button, Card, Text } from "react-native-paper";
 import { getAllEvents } from "./api";
 import type { Event } from "./models";
 
@@ -24,21 +25,24 @@ export default function EventsList() {
   return (
     <View>
       {events.map((event) => (
-        <View
-          key={event.id}
-          accessible
-          accessibilityRole="summary"
-          accessibilityLabel={`${event.title}. ${event.description}.`}
-        >
-          <Text accessible={false}>{event.title}</Text>
-          <Text accessible={false}>{event.description}</Text>
+        <Card key={event.id} style={{ margin: 10 }}>
+          <Card.Title title={event.title} />
+          <Card.Content>
+            <View
+              key={event.id}
+              accessible
+              accessibilityRole="summary"
+              accessibilityLabel={`${event.title}. ${event.description}.`}
+            >
+              <Text accessible={false}>{event.title}</Text>
+              <Text accessible={false}>{event.description}</Text>
 
-          <Button
-            title="View details"
-            accessibilityLabel={`View details for ${event.title}`}
-            onPress={() => router.push(`/events/${event.id}`)}
-          />
-        </View>
+              <Button onPress={() => router.push(`/events/${event.id}`)}>
+                View details
+              </Button>
+            </View>
+          </Card.Content>
+        </Card>
       ))}
     </View>
   );
