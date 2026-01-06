@@ -36,10 +36,11 @@ export default function EventsList() {
             >
               <Text accessible={false}>{event.title}</Text>
               <Text accessible={false}>{event.description}</Text>
-
-              <Button onPress={() => router.push(`/events/${event.id}`)}>
-                View details
-              </Button>
+              <Card.Actions>
+                <Button onPress={() => router.push(`/events/${event.id}`)}>
+                  View details
+                </Button>
+              </Card.Actions>
             </View>
           </Card.Content>
         </Card>

@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Button, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, ScrollView, TextInput, View } from "react-native";
+import { Button, Chip, Text } from "react-native-paper";
 import { createEvent, getAllCategories } from "./api";
 import type { Category } from "./models";
 
@@ -131,11 +132,14 @@ export default function CreateEventScreen() {
           </Text>
         ) : (
           categories.map((c) => (
-            <Button
+            <Chip
               key={c.id}
-              title={c.id === categoryId ? `✓ ${c.name}` : c.name}
+              mode={categoryId === c.id ? "flat" : "outlined"}
+              selected={categoryId === c.id}
               onPress={() => setCategoryId(c.id)}
-            />
+            >
+              {c.name}
+            </Chip>
           ))
         )}
       </View>
@@ -156,10 +160,13 @@ export default function CreateEventScreen() {
         style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
       />
       <Button
-        title={saving ? "Saving..." : "Create event"}
-        onPress={onCreate}
+        mode="contained"
+        loading={saving}
         disabled={!canSubmit}
-      />
+        onPress={onCreate}
+      >
+        {saving ? "Saving..." : "Create event"}
+      </Button>
     </ScrollView>
   );
 }

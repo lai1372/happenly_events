@@ -104,23 +104,25 @@ export default function EventDetails() {
             accessible={true}
             accessibilityLabel={event.imageDescription}
           />
-          <Button onPress={confirmDelete}>Delete Event</Button>
+          <Card.Actions>
+            <Button onPress={confirmDelete}>Delete Event</Button>
 
-          <Button
-            onPress={() => {
-              router.push(`/events/${event.id}/edit`);
-            }}
-          >
-            Edit Event
-          </Button>
+            <Button
+              onPress={() => {
+                router.push(`/events/${event.id}/edit`);
+              }}
+            >
+              Edit Event
+            </Button>
 
-          <Button
-            onPress={() => {
-              addEventToCalendar();
-            }}
-          >
-            Add to Calendar
-          </Button>
+            <Button
+              onPress={() => {
+                addEventToCalendar();
+              }}
+            >
+              Add to Calendar
+            </Button>
+          </Card.Actions>
         </Card.Content>
       </Card>
     </View>
