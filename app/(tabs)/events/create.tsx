@@ -1,13 +1,19 @@
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, ScrollView, TextInput, View } from "react-native";
-import { Button, Chip, Text } from "react-native-paper";
+import { Alert, ScrollView, View } from "react-native";
+import {
+  Button,
+  Card,
+  Chip,
+  TextInput as PaperTextInput,
+  Text,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createEvent, getAllCategories } from "./api";
+
 import type { Category } from "./models";
 
 export default function CreateEventScreen() {
-
   // Form state variables
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -38,7 +44,6 @@ export default function CreateEventScreen() {
     }
     loadCategories();
   }, []);
-
 
   // Determine if the form can be submitted, useMemo to optimise performance, recalculating only when dependencies (form state) change
   const canSubmit = useMemo(() => {
@@ -82,107 +87,134 @@ export default function CreateEventScreen() {
     // Safe area to avoid notches and screen edges
     <SafeAreaView style={{ flex: 1, padding: 16 }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
-        <Text style={{ fontSize: 22, fontWeight: "600" }}>Create event</Text>
-
-        <Text>Title *</Text>
-        <TextInput
-          value={title}
-          onChangeText={setTitle}
-          placeholder="e.g. Jazz Night"
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
-
-        <Text>Description</Text>
-        <TextInput
-          value={description}
-          onChangeText={setDescription}
-          placeholder="What’s happening?"
-          multiline
-          style={{
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 12,
-            minHeight: 90,
-          }}
-        />
-
-        <Text>Location *</Text>
-        <TextInput
-          value={location}
-          onChangeText={setLocation}
-          placeholder="e.g. Shoreditch, London"
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
-
-        <Text>Date (YYYY-MM-DD) *</Text>
-        <TextInput
-          value={dateStr}
-          onChangeText={setDateStr}
-          style={{
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 12,
-            borderColor: dateError ? "red" : "#ccc",
-          }}
-          onBlur={() => {
-            // Validate date format on blur (when user clicks away) and set error message if invalid
-            if (dateStr && !dateRegex.test(dateStr)) {
-              setDateError("Date must be in format YYYY-MM-DD");
-            } else {
-              setDateError(null);
-            }
-          }}
-          placeholder="e.g. 2026-01-20"
-          keyboardType="numbers-and-punctuation"
-        />
-
-        {dateError && (
-          <Text style={{ color: "red", marginTop: 4 }}>{dateError}</Text>
-        )}
-
-        <Text>Category *</Text>
-        <View style={{ gap: 8 }}>
-          {categories.length === 0 ? (
-            <Text style={{ opacity: 0.7 }}>
-              No categories found. Add some in Firestore.
+        <Card style={{ marginHorizontal: 16 }}>
+          <Card.Content style={{ gap: 12 }}>
+            <Text style={{ fontSize: 22, fontWeight: "600" }}>
+              Create event
             </Text>
-          ) : (
-            categories.map((c) => (
-              <Chip
-                key={c.id}
-                mode={categoryId === c.id ? "flat" : "outlined"}
-                selected={categoryId === c.id}
-                onPress={() => setCategoryId(c.id)}
-              >
-                {c.name}
-              </Chip>
-            ))
-          )}
-        </View>
 
-        <Text>Image URL</Text>
-        <TextInput
-          value={imageUrl}
-          onChangeText={setImageUrl}
-          placeholder="https://..."
-          autoCapitalize="none"
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
-        <Text>Image description (50 characters max)</Text>
-        <TextInput
-          placeholder="Image description"
-          value={imageDescription}
-          onChangeText={setImageDescription}
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
-        <Button
-          mode="contained"
-          loading={saving}
-          disabled={!canSubmit}
-          onPress={onCreate}
-        >
-          {saving ? "Saving..." : "Create event"}
-        </Button>
+            <Text>Title *</Text>
+            <PaperTextInput
+              value={title}
+              onChangeText={setTitle}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 12,
+                minHeight: 90,
+                borderColor: "#ccc",
+              }}
+            />
+
+            <Text>Description</Text>
+            <PaperTextInput
+              value={description}
+              onChangeText={setDescription}
+              multiline
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 12,
+                minHeight: 90,
+                borderColor: "#ccc",
+              }}
+            />
+
+            <Text>Location *</Text>
+            <PaperTextInput
+              value={location}
+              onChangeText={setLocation}
+              left={<PaperTextInput.Icon icon="map-marker" />}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 12,
+                borderColor: "#ccc",
+              }}
+            />
+
+            <Text>Date (YYYY-MM-DD) *</Text>
+            <PaperTextInput
+              value={dateStr}
+              left={<PaperTextInput.Icon icon="calendar" />}
+              onChangeText={setDateStr}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 12,
+                borderColor: dateError ? "red" : "#ccc",
+              }}
+              onBlur={() => {
+                // Validate date format on blur (when user clicks away) and set error message if invalid
+                if (dateStr && !dateRegex.test(dateStr)) {
+                  setDateError("Date must be in format YYYY-MM-DD");
+                } else {
+                  setDateError(null);
+                }
+              }}
+              keyboardType="numbers-and-punctuation"
+            />
+
+            {dateError && (
+              <Text style={{ color: "red", marginTop: 4 }}>{dateError}</Text>
+            )}
+
+            <Text>Category *</Text>
+            <View style={{ gap: 8 }}>
+              {categories.length === 0 ? (
+                <Text style={{ opacity: 0.7 }}>
+                  No categories found. Add some in Firestore.
+                </Text>
+              ) : (
+                categories.map((c) => (
+                  <Chip
+                    key={c.id}
+                    mode={categoryId === c.id ? "flat" : "outlined"}
+                    selected={categoryId === c.id}
+                    onPress={() => setCategoryId(c.id)}
+                  >
+                    {c.name}
+                  </Chip>
+                ))
+              )}
+            </View>
+
+            <Text>Image URL</Text>
+            <PaperTextInput
+              value={imageUrl}
+              left={<PaperTextInput.Icon icon="image" />}
+              onChangeText={setImageUrl}
+              autoCapitalize="none"
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 12,
+                borderColor: "#ccc",
+              }}
+            />
+            <Text>Image description (50 characters max)</Text>
+            <PaperTextInput
+              value={imageDescription}
+              onChangeText={setImageDescription}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 12,
+                borderColor: "#ccc",
+              }}
+            />
+            <Button
+              accessibilityLabel="button"
+              accessibilityHint="Creates a new event with the provided details"
+              mode="contained"
+              loading={saving}
+              disabled={!canSubmit}
+              onPress={onCreate}
+            >
+              {saving ? "Saving..." : "Create event"}
+            </Button>
+          </Card.Content>
+        </Card>
       </ScrollView>
     </SafeAreaView>
   );

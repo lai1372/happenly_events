@@ -1,50 +1,64 @@
-import { Tabs, Redirect } from "expo-router";
-import React from "react";
-
-import { HapticTab } from "@/components/haptic-tab";
-import { IconSymbol } from "@/components/ui/icon-symbol";
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useAuth } from "@/src/features/auth/hooks/useAuth";
+import { Redirect, Stack, router } from "expo-router";
+import React, { useState } from "react";
+import { IconButton, Menu } from "react-native-paper";
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return null;
-  }
-
-  if (!user) {
-    return <Redirect href="/login" />;
-  }
+function HamburgerMenu() {
+  const [visible, setVisible] = useState(false);
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}
+    <Menu
+      visible={visible}
+      onDismiss={() => setVisible(false)}
+      anchor={
+        <IconButton
+          icon="menu"
+          onPress={() => setVisible(true)}
+          accessibilityLabel="Open menu"
+        />
+      }
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
-          ),
+      <Menu.Item
+        title="Home"
+        onPress={() => {
+          setVisible(false);
+          router.push("/");
         }}
       />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
+      <Menu.Item
+        title="Account"
+        onPress={() => {
+          setVisible(false);
+          router.push("/account");
         }}
       />
-    </Tabs>
+      <Menu.Item
+        title="Events"
+        onPress={() => {
+          setVisible(false);
+          router.push("/events");
+        }}
+      />
+    </Menu>
+  );
+}
+
+export default function TabsLayout() {
+  // Firebase authentication
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+
+  // If no user found, redirect to login page
+  if (!user) return <Redirect href="/login" />;
+
+  // If user exists, show hamburger menu
+  return (
+    <Stack
+      screenOptions={{
+        headerTitle: "",
+        headerLeft: () => <HamburgerMenu />,
+      }}
+    />
   );
 }
