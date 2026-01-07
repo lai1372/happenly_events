@@ -1,6 +1,8 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
+import { Button, Card, Text } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllEvents } from "./api";
 import type { Event } from "./models";
 
@@ -22,24 +24,30 @@ export default function EventsList() {
   }
 
   return (
-    <View>
-      {events.map((event) => (
-        <View
-          key={event.id}
-          accessible
-          accessibilityRole="summary"
-          accessibilityLabel={`${event.title}. ${event.description}.`}
-        >
-          <Text accessible={false}>{event.title}</Text>
-          <Text accessible={false}>{event.description}</Text>
-
-          <Button
-            title="View details"
-            accessibilityLabel={`View details for ${event.title}`}
-            onPress={() => router.push(`/events/${event.id}`)}
-          />
-        </View>
-      ))}
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 16 }}>
+        {events.map((event) => (
+          <Card key={event.id} style={{ margin: 10 }}>
+            <Card.Title title={event.title} />
+            <Card.Content>
+              <View
+                key={event.id}
+                accessible
+                accessibilityRole="summary"
+                accessibilityLabel={`${event.title}. ${event.description}.`}
+              >
+                <Text accessible={false}>{event.title}</Text>
+                <Text accessible={false}>{event.description}</Text>
+                <Card.Actions>
+                  <Button onPress={() => router.push(`/events/${event.id}`)}>
+                    View details
+                  </Button>
+                </Card.Actions>
+              </View>
+            </Card.Content>
+          </Card>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }

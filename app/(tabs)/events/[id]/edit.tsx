@@ -2,7 +2,16 @@ import { db } from "@/src/core/firebase/client";
 import { router, useLocalSearchParams } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Button, ScrollView, Text, TextInput, View } from "react-native";
+import { ScrollView } from "react-native";
+import {
+  Button,
+  Divider,
+  HelperText,
+  Surface,
+  Text,
+  TextInput,
+} from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getEventById } from "../api";
 import type { Event } from "../models";
 
@@ -70,83 +79,93 @@ export default function EditEvent() {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
-      <Text style={{ fontSize: 22, fontWeight: "600" }}>
-        Editing event: {eventData.title}
-      </Text>
-      <View>
-        <Text>Title</Text>
-        <TextInput
-          placeholder="Title"
-          value={eventData.title}
-          onChangeText={(text) => setEventData({ ...eventData, title: text })}
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
-        <Text>Description</Text>
-        <TextInput
-          placeholder="Description"
-          value={eventData.description}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, description: text })
-          }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 16 }}>
+        <Surface style={{ padding: 16, borderRadius: 12 }} elevation={2}>
+          <Text variant="titleLarge" style={{ marginBottom: 16 }}>
+            Editing event: {eventData.title}
+          </Text>
 
-        <Text>Date (YYYY-MM-DD) *</Text>
-        <TextInput
-          value={eventData.date}
-          onChangeText={(text) => setEventData({ ...eventData, date: text })}
-          style={{
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 12,
-            borderColor: dateError ? "red" : "#ccc",
-          }}
-          onBlur={() => {
-            if (eventData.date && !dateRegex.test(eventData.date)) {
-              setDateError("Date must be in format YYYY-MM-DD");
-            } else {
-              setDateError(null);
+          <TextInput
+            label="Title"
+            mode="outlined"
+            value={eventData.title}
+            onChangeText={(text) => setEventData({ ...eventData, title: text })}
+            style={{ marginBottom: 12 }}
+          />
+
+          <TextInput
+            label="Description"
+            mode="outlined"
+            multiline
+            value={eventData.description}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, description: text })
             }
-          }}
-          placeholder="e.g. 2026-01-20"
-          keyboardType="numbers-and-punctuation"
-        />
+            style={{ marginBottom: 12 }}
+          />
 
-        {dateError && (
-          <Text style={{ color: "red", marginTop: 4 }}>{dateError}</Text>
-        )}
+          <TextInput
+            label="Date (YYYY-MM-DD)"
+            mode="outlined"
+            value={eventData.date}
+            error={!!dateError}
+            onChangeText={(text) => setEventData({ ...eventData, date: text })}
+            onBlur={() => {
+              if (eventData.date && !dateRegex.test(eventData.date)) {
+                setDateError("Date must be in format YYYY-MM-DD");
+              } else {
+                setDateError(null);
+              }
+            }}
+            keyboardType="numbers-and-punctuation"
+          />
 
-        <Text>Location</Text>
-        <TextInput
-          placeholder="Location"
-          value={eventData.location}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, location: text })
-          }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
+          <HelperText type="error" visible={!!dateError}>
+            {dateError}
+          </HelperText>
 
-        <Text>Image URL</Text>
-        <TextInput
-          placeholder="Image URL"
-          value={eventData.imageUrl}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, imageUrl: text })
-          }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
-        <Text>Image description (50 characters max)</Text>
-        <TextInput
-          placeholder="Image description"
-          value={eventData.imageDescription}
-          onChangeText={(text) =>
-            setEventData({ ...eventData, imageDescription: text })
-          }
-          style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
-        />
-        <Button title="Save Changes" onPress={handleSave} />
-      </View>
-    </ScrollView>
+          <Divider style={{ marginVertical: 16 }} />
+
+          <TextInput
+            label="Location"
+            mode="outlined"
+            value={eventData.location}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, location: text })
+            }
+            style={{ marginBottom: 12 }}
+          />
+
+          <TextInput
+            label="Image URL"
+            mode="outlined"
+            value={eventData.imageUrl}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, imageUrl: text })
+            }
+            style={{ marginBottom: 12 }}
+          />
+
+          <TextInput
+            label="Image description (max 50 chars)"
+            mode="outlined"
+            value={eventData.imageDescription}
+            maxLength={50}
+            onChangeText={(text) =>
+              setEventData({ ...eventData, imageDescription: text })
+            }
+          />
+
+          <Button
+            mode="contained"
+            onPress={handleSave}
+            style={{ marginTop: 24 }}
+          >
+            Save Changes
+          </Button>
+        </Surface>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
