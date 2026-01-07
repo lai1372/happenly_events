@@ -1,7 +1,7 @@
 import { db } from "@/src/core/firebase/client";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import { ScrollView } from "react-native";
 import {
   Button,
@@ -35,27 +35,29 @@ export default function EditEvent() {
   const [dateError, setDateError] = useState<string | null>(null);
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-  useEffect(() => {
-    if (!eventId) return;
+  useFocusEffect(
+    useCallback(() => {
+      if (!eventId) return;
 
-    async function fetchEvent() {
-      try {
-        const evt = await getEventById(eventId);
-        if (evt) {
-          const { id, ...docFields } = evt;
-          setEventData(docFields);
-        } else {
-          console.log("No such document!");
+      async function fetchEvent() {
+        try {
+          const evt = await getEventById(eventId);
+          if (evt) {
+            const { id, ...docFields } = evt;
+            setEventData(docFields);
+          } else {
+            console.log("No such document!");
+          }
+        } catch (e) {
+          console.error("Failed to fetch event", e);
+        } finally {
+          setLoading(false);
         }
-      } catch (e) {
-        console.error("Failed to fetch event", e);
-      } finally {
-        setLoading(false);
       }
-    }
 
-    fetchEvent();
-  }, [eventId]);
+      fetchEvent();
+    }, [eventId])
+  );
 
   const handleSave = async () => {
     try {
