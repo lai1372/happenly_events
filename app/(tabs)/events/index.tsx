@@ -1,5 +1,5 @@
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useState, useCallback } from "react";
 import { ScrollView, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,9 +15,12 @@ export default function EventsList() {
     const events = await getAllEvents();
     setEvents(events);
   }
-  useEffect(() => {
-    loadEvents();
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadEvents();
+    }, [])
+  );
 
   if (events.length === 0) {
     return <Text>No events found.</Text>;

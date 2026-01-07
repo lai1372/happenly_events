@@ -1,6 +1,6 @@
 import * as Calendar from "expo-calendar";
-import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useState } from "react";
 import { Alert, Image, ScrollView, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,16 +11,19 @@ type EventWithId = Event & { id: string };
 
 export default function EventDetails() {
   const [event, setEvent] = useState<EventWithId | null>(null);
-  const id = useLocalSearchParams().id;
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-  useEffect(() => {
-    async function loadEvent() {
-      const evt = await getEventById(id as string);
-      if (evt) setEvent(evt);
-      else console.log("No such document!");
-    }
-    loadEvent();
-  }, [id]);
+  useFocusEffect(
+    useCallback(() => {
+      async function loadEvent() {
+        const evt = await getEventById(id);
+        if (evt) setEvent(evt);
+        else console.log("No such document!");
+      }
+
+      if (id) loadEvent();
+    }, [id])
+  );
 
   if (!event) {
     return <Text>No event found</Text>;
