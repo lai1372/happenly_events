@@ -17,9 +17,11 @@ import type { Event } from "../models";
 
 export default function EditEvent() {
   const params = useLocalSearchParams();
-  const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  console.log("Editing event with ID:", eventId);
+  // Get event ID from route parameters
+  const eventId = params.id as string;
+
+  // Use Event type for form state, start with empty fields and populate on load
   const [eventData, setEventData] = useState<Event>({
     title: "",
     description: "",
@@ -35,6 +37,7 @@ export default function EditEvent() {
   const [dateError, setDateError] = useState<string | null>(null);
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
+  // Load existing event data on focus, useful for pre-filling the form fields
   useFocusEffect(
     useCallback(() => {
       if (!eventId) return;
@@ -59,6 +62,7 @@ export default function EditEvent() {
     }, [eventId])
   );
 
+  // Handle saving the updated event data to Firestore, then navigate back to the event details page. Log errors if the update fails.
   const handleSave = async () => {
     try {
       await updateDoc(doc(db, "events", eventId as string), {

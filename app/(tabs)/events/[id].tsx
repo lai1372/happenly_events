@@ -13,6 +13,7 @@ export default function EventDetails() {
   const [event, setEvent] = useState<EventWithId | null>(null);
   const { id } = useLocalSearchParams<{ id: string }>();
 
+  // Load event details when the component is focused, useful for refreshing data after edits have been made
   useFocusEffect(
     useCallback(() => {
       async function loadEvent() {
@@ -25,9 +26,13 @@ export default function EventDetails() {
     }, [id])
   );
 
+  // Handle case where event is not found, show a message on the screen
   if (!event) {
     return <Text>No event found</Text>;
   }
+
+  /* Confirm deletion of the event with an alert dialog, style the buttons appropriately. 
+   If confirmed, delete the event and navigate back to the events list, otherwise cancel. */
 
   function confirmDelete() {
     if (!event) return;
@@ -52,6 +57,7 @@ export default function EventDetails() {
     ]);
   }
 
+  // Use Expo Calendar native API to add the event to the user's calendar. Throw errors if permissions are not granted or no writable calendar found.
   async function addEventToCalendar() {
     if (!event) return;
     try {
