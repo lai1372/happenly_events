@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { signOut } from "firebase/auth";
 import { Button, View } from "react-native";
 
+// Account screen with a sign out button that signs the user out and redirects to the login screen
 export default function AccountScreen() {
   async function handleSignOut() {
     try {

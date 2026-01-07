@@ -7,6 +7,8 @@ import { createEvent, getAllCategories } from "./api";
 import type { Category } from "./models";
 
 export default function CreateEventScreen() {
+
+  // Form state variables
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -21,9 +23,11 @@ export default function CreateEventScreen() {
 
   const [saving, setSaving] = useState(false);
 
+  // Regular expression to validate date format YYYY-MM-DD
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
   useEffect(() => {
+    // Load categories from the API when page loads and set them in state
     async function loadCategories() {
       try {
         const cats = await getAllCategories();
@@ -35,6 +39,8 @@ export default function CreateEventScreen() {
     loadCategories();
   }, []);
 
+
+  // Determine if the form can be submitted, useMemo to optimise performance, recalculating only when dependencies (form state) change
   const canSubmit = useMemo(() => {
     const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
     const isValidDateFormat = (date: string) => dateRegex.test(date);
@@ -61,9 +67,11 @@ export default function CreateEventScreen() {
         imageDescription,
       });
 
+      // Show success alert with the new event ID
       Alert.alert("Event created", `ID: ${docRef.id}`);
       router.replace("/events");
     } catch (e: any) {
+      // Show error alert if creation fails
       Alert.alert("Create failed", e?.message ?? String(e));
     } finally {
       setSaving(false);
@@ -71,6 +79,7 @@ export default function CreateEventScreen() {
   }
 
   return (
+    // Safe area to avoid notches and screen edges
     <SafeAreaView style={{ flex: 1, padding: 16 }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
         <Text style={{ fontSize: 22, fontWeight: "600" }}>Create event</Text>
@@ -116,6 +125,7 @@ export default function CreateEventScreen() {
             borderColor: dateError ? "red" : "#ccc",
           }}
           onBlur={() => {
+            // Validate date format on blur (when user clicks away) and set error message if invalid
             if (dateStr && !dateRegex.test(dateStr)) {
               setDateError("Date must be in format YYYY-MM-DD");
             } else {

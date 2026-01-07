@@ -6,27 +6,34 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllEvents } from "./api";
 import type { Event } from "./models";
 
+// Extend Event type to include an id for listing purposes (key prop)
 type EventWithId = Event & { id: string };
 
 export default function EventsList() {
+
+  // State to hold the list of events
   const [events, setEvents] = useState<EventWithId[]>([]);
 
+  // Function to load events from the API
   async function loadEvents() {
     const events = await getAllEvents();
     setEvents(events);
   }
 
+  // Reload events when the screen is focused
   useFocusEffect(
     useCallback(() => {
       loadEvents();
     }, [])
   );
 
+  // Handle empty state - if no events, show a message on the screen
   if (events.length === 0) {
     return <Text>No events found.</Text>;
   }
 
   return (
+    // Safe area to avoid notches and screen edges
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {events.map((event) => (

@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string | null>(null);
 
+  // Handle user login, redirect to home on success, show error message on failure
   async function onLogin() {
     setErr(null);
     try {
