@@ -1,7 +1,7 @@
 import { router, useFocusEffect } from "expo-router";
-import { useState, useCallback } from "react";
-import { ScrollView, View } from "react-native";
-import { Button, Card, Text } from "react-native-paper";
+import { useCallback, useState } from "react";
+import { Image, ScrollView, View } from "react-native";
+import { Button, Card, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllEvents } from "./api";
 import type { Event } from "./models";
@@ -10,7 +10,6 @@ import type { Event } from "./models";
 type EventWithId = Event & { id: string };
 
 export default function EventsList() {
-
   // State to hold the list of events
   const [events, setEvents] = useState<EventWithId[]>([]);
 
@@ -44,12 +43,31 @@ export default function EventsList() {
                 key={event.id}
                 accessible
                 accessibilityRole="summary"
-                accessibilityLabel={`${event.title}. ${event.description}.`}
+                accessibilityLabel={`${event.date}.`}
               >
-                <Text accessible={false}>{event.title}</Text>
-                <Text accessible={false}>{event.description}</Text>
+                <List.Item
+                  title="Date"
+                  description={event.date}
+                  left={(props) => <List.Icon {...props} icon="calendar" />}
+                />
+                <List.Item
+                  title="Location"
+                  description={event.location}
+                  left={(props) => <List.Icon {...props} icon="map-marker" />}
+                />
+                <Image
+                  source={{ uri: event.imageUrl }}
+                  style={{ width: "100%", height: 200, marginTop: 8 }}
+                  accessibilityLabel={event.imageDescription || "Event image"}
+                />
                 <Card.Actions>
-                  <Button onPress={() => router.push(`/events/${event.id}`)}>
+                  <Button
+                    mode="contained-tonal"
+                    accessibilityRole="button"
+                    accessibilityLabel={`View details for ${event.title}`}
+                    accessibilityHint="Opens the event details screen"
+                    onPress={() => router.push(`/events/${event.id}`)}
+                  >
                     View details
                   </Button>
                 </Card.Actions>

@@ -1,7 +1,8 @@
 import { auth } from "@/src/core/firebase/client";
 import { router } from "expo-router";
 import { signOut } from "firebase/auth";
-import { Button, View } from "react-native";
+import { View } from "react-native";
+import { Button } from "react-native-paper";
 
 // Account screen with a sign out button that signs the user out and redirects to the login screen
 export default function AccountScreen() {
@@ -15,7 +16,15 @@ export default function AccountScreen() {
   }
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button title="Sign Out" onPress={handleSignOut} />
+      <Button
+        mode="contained"
+        onPress={handleSignOut}
+        accessibilityRole="button"
+        accessibilityLabel="Sign out of your account"
+        accessibilityHint="Logs you out and returns you to the login screen"
+      >
+        Sign out
+      </Button>
     </View>
   );
 }

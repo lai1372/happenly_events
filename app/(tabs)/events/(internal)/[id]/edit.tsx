@@ -1,7 +1,7 @@
 import { db } from "@/src/core/firebase/client";
-import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ScrollView } from "react-native";
 import {
   Button,
@@ -12,8 +12,8 @@ import {
   TextInput,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getEventById } from "../api";
-import type { Event } from "../models";
+import { getEventById } from "../../api";
+import type { Event } from "../../models";
 
 export default function EditEvent() {
   const params = useLocalSearchParams();
@@ -88,13 +88,14 @@ export default function EditEvent() {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <Surface style={{ padding: 16, borderRadius: 12 }} elevation={2}>
-          <Text variant="titleLarge" style={{ marginBottom: 16 }}>
+          <Text variant="headlineSmall" style={{ marginBottom: 16 }}>
             Editing event: {eventData.title}
           </Text>
 
           <TextInput
             label="Title"
             mode="outlined"
+            accessibilityLabel="Event title"
             value={eventData.title}
             onChangeText={(text) => setEventData({ ...eventData, title: text })}
             style={{ marginBottom: 12 }}
@@ -102,6 +103,7 @@ export default function EditEvent() {
 
           <TextInput
             label="Description"
+            accessibilityLabel="Event description"
             mode="outlined"
             multiline
             value={eventData.description}
@@ -114,6 +116,8 @@ export default function EditEvent() {
           <TextInput
             label="Date (YYYY-MM-DD)"
             mode="outlined"
+            accessibilityLabel="Event date in YYYY-MM-DD format"
+            left={<TextInput.Icon icon="calendar" />}
             value={eventData.date}
             error={!!dateError}
             onChangeText={(text) => setEventData({ ...eventData, date: text })}
@@ -136,6 +140,8 @@ export default function EditEvent() {
           <TextInput
             label="Location"
             mode="outlined"
+            accessibilityLabel="Event location"
+            left={<TextInput.Icon icon="map-marker" />}
             value={eventData.location}
             onChangeText={(text) =>
               setEventData({ ...eventData, location: text })
@@ -145,7 +151,9 @@ export default function EditEvent() {
 
           <TextInput
             label="Image URL"
+            accessibilityLabel="Event image URL"
             mode="outlined"
+            left={<TextInput.Icon icon="image" />}
             value={eventData.imageUrl}
             onChangeText={(text) =>
               setEventData({ ...eventData, imageUrl: text })
@@ -155,6 +163,7 @@ export default function EditEvent() {
 
           <TextInput
             label="Image description (max 50 chars)"
+            accessibilityLabel="Description of the event image for accessibility"
             mode="outlined"
             value={eventData.imageDescription}
             maxLength={50}
@@ -164,6 +173,9 @@ export default function EditEvent() {
           />
 
           <Button
+            accessibilityRole="button"
+            accessibilityLabel="Save changes to event"
+            accessibilityHint="Saves the edited event and returns to the event details screen"
             mode="contained"
             onPress={handleSave}
             style={{ marginTop: 24 }}
