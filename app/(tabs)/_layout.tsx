@@ -39,6 +39,13 @@ function HamburgerMenu() {
           router.push("/events");
         }}
       />
+      <Menu.Item
+        title="Create Event"
+        onPress={() => {
+          setVisible(false);
+          router.push("/events/create");
+        }}
+      />
     </Menu>
   );
 }

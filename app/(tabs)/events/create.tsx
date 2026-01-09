@@ -1,13 +1,7 @@
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, ScrollView, View } from "react-native";
-import {
-  Button,
-  Card,
-  Chip,
-  TextInput as PaperTextInput,
-  Text,
-} from "react-native-paper";
+import { Button, Card, Chip, Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createEvent, getAllCategories } from "./api";
 
@@ -29,8 +23,8 @@ export default function CreateEventScreen() {
 
   const [saving, setSaving] = useState(false);
 
-  // Regular expression to validate date format YYYY-MM-DD
-  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+  // Regular expression to validate date format DD-MM-YYYY
+  const dateRegex = /^(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
 
   useEffect(() => {
     // Load categories from the API when page loads and set them in state
@@ -47,7 +41,7 @@ export default function CreateEventScreen() {
 
   // Determine if the form can be submitted, useMemo to optimise performance, recalculating only when dependencies (form state) change
   const canSubmit = useMemo(() => {
-    const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+    const dateRegex = /^(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
     const isValidDateFormat = (date: string) => dateRegex.test(date);
 
     return (
@@ -94,7 +88,10 @@ export default function CreateEventScreen() {
             </Text>
 
             <Text>Title *</Text>
-            <PaperTextInput
+            <TextInput
+              label="Title"
+              mode="outlined"
+              accessibilityLabel="Event title"
               value={title}
               onChangeText={setTitle}
               style={{
@@ -107,7 +104,10 @@ export default function CreateEventScreen() {
             />
 
             <Text>Description</Text>
-            <PaperTextInput
+            <TextInput
+              label="Description"
+              accessibilityLabel="Event description"
+              mode="outlined"
               value={description}
               onChangeText={setDescription}
               multiline
@@ -121,10 +121,13 @@ export default function CreateEventScreen() {
             />
 
             <Text>Location *</Text>
-            <PaperTextInput
+            <TextInput
+              label="Location"
+              mode="outlined"
+              accessibilityLabel="Event location"
               value={location}
               onChangeText={setLocation}
-              left={<PaperTextInput.Icon icon="map-marker" />}
+              left={<TextInput.Icon icon="map-marker" />}
               style={{
                 borderWidth: 1,
                 borderRadius: 8,
@@ -133,10 +136,13 @@ export default function CreateEventScreen() {
               }}
             />
 
-            <Text>Date (YYYY-MM-DD) *</Text>
-            <PaperTextInput
+            <Text>Date (DD-MM-YYYY) *</Text>
+            <TextInput
+              label="Date (DD-MM-YYYY)"
+              mode="outlined"
+              accessibilityLabel="Event date in DD-MM-YYYY format"
               value={dateStr}
-              left={<PaperTextInput.Icon icon="calendar" />}
+              left={<TextInput.Icon icon="calendar" />}
               onChangeText={setDateStr}
               style={{
                 borderWidth: 1,
@@ -147,7 +153,7 @@ export default function CreateEventScreen() {
               onBlur={() => {
                 // Validate date format on blur (when user clicks away) and set error message if invalid
                 if (dateStr && !dateRegex.test(dateStr)) {
-                  setDateError("Date must be in format YYYY-MM-DD");
+                  setDateError("Date must be in format DD-MM-YYYY");
                 } else {
                   setDateError(null);
                 }
@@ -180,9 +186,12 @@ export default function CreateEventScreen() {
             </View>
 
             <Text>Image URL</Text>
-            <PaperTextInput
+            <TextInput
+              label="Image URL"
+              accessibilityLabel="Event image URL"
+              mode="outlined"
               value={imageUrl}
-              left={<PaperTextInput.Icon icon="image" />}
+              left={<TextInput.Icon icon="image" />}
               onChangeText={setImageUrl}
               autoCapitalize="none"
               style={{
@@ -193,7 +202,10 @@ export default function CreateEventScreen() {
               }}
             />
             <Text>Image description (50 characters max)</Text>
-            <PaperTextInput
+            <TextInput
+              label="Image description (max 50 chars)"
+              accessibilityLabel="Description of the event image for accessibility"
+              mode="outlined"
               value={imageDescription}
               onChangeText={setImageDescription}
               style={{
