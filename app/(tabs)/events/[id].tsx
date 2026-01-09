@@ -123,8 +123,11 @@ export default function EventDetails() {
                 accessibilityLabel={event.imageDescription}
                 accessible={true}
               />
-              <Card.Actions style={{ justifyContent: "space-between" }}>
+              <Card.Actions
+                style={{ flexDirection: "column", alignItems: "stretch" }}
+              >
                 <Button
+                  style={{ marginBottom: 8 }}
                   accessibilityLabel="button"
                   accessibilityHint="Adds this event to your device calendar"
                   icon="calendar-plus"
@@ -136,6 +139,7 @@ export default function EventDetails() {
                   Add to Calendar
                 </Button>
                 <Button
+                  style={{ marginBottom: 8 }}
                   accessibilityLabel="button"
                   accessibilityHint="Edits this event"
                   icon="pencil"
@@ -151,7 +155,7 @@ export default function EventDetails() {
                   accessibilityLabel="button"
                   accessibilityHint="Deletes this event permanently"
                   icon="delete"
-                  mode="text"
+                  mode="outlined"
                   onPress={confirmDelete}
                 >
                   Delete Event
