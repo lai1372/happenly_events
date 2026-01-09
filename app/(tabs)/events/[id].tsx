@@ -104,7 +104,7 @@ export default function EventDetails() {
           key={event.id}
         >
           <Card>
-            <Card.Title title={event.title} />
+            <Card.Title title={event.title} titleVariant="titleLarge" />
             <Card.Content>
               <List.Item title="Event" description={event.title} />
               <List.Item title="Description" description={event.description} />
