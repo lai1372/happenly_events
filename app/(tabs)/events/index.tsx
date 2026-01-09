@@ -37,7 +37,7 @@ export default function EventsList() {
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {events.map((event) => (
           <Card key={event.id} style={{ margin: 10 }}>
-            <Card.Title title={event.title} />
+            <Card.Title title={event.title} titleVariant="titleLarge" />
             <Card.Content>
               <View
                 key={event.id}
