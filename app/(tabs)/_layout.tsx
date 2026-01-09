@@ -12,6 +12,8 @@ function HamburgerMenu() {
       onDismiss={() => setVisible(false)}
       anchor={
         <IconButton
+          style={{ margin: 0 }}
+          size={24}
           icon="menu"
           onPress={() => setVisible(true)}
           accessibilityLabel="Open menu"
