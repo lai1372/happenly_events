@@ -114,16 +114,16 @@ export default function EditEvent() {
           />
 
           <TextInput
-            label="Date (YYYY-MM-DD)"
+            label="Date (DD-MM-YYYY)"
             mode="outlined"
-            accessibilityLabel="Event date in YYYY-MM-DD format"
+            accessibilityLabel="Event date in DD-MM-YYYY format"
             left={<TextInput.Icon icon="calendar" />}
             value={eventData.date}
             error={!!dateError}
             onChangeText={(text) => setEventData({ ...eventData, date: text })}
             onBlur={() => {
               if (eventData.date && !dateRegex.test(eventData.date)) {
-                setDateError("Date must be in format YYYY-MM-DD");
+                setDateError("Date must be in format DD-MM-YYYY");
               } else {
                 setDateError(null);
               }
