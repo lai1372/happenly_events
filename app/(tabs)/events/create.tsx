@@ -5,7 +5,7 @@ import { Button, Card, Chip, Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createEvent, getAllCategories } from "./api";
 
-import type { Category } from "./models";
+import type { Category, Event } from "./models";
 
 export default function CreateEventScreen() {
   // Form state variables
@@ -56,7 +56,7 @@ export default function CreateEventScreen() {
   async function onCreate() {
     setSaving(true);
     try {
-      const docRef = await createEvent({
+      const newEvent: Event = {
         title,
         description,
         location,
@@ -64,7 +64,8 @@ export default function CreateEventScreen() {
         categoryId,
         imageUrl,
         imageDescription,
-      });
+      };
+      const docRef = await createEvent(newEvent);
 
       // Show success alert with the new event ID
       Alert.alert("Event created", `ID: ${docRef.id}`);
