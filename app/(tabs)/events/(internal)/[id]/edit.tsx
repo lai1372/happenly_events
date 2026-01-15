@@ -3,6 +3,8 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { useCallback, useState } from "react";
 import { ScrollView } from "react-native";
+import { updateEvent } from "../../api";
+
 import {
   Button,
   Divider,
@@ -65,15 +67,7 @@ export default function EditEvent() {
   // Handle saving the updated event data to Firestore, then navigate back to the event details page. Log errors if the update fails.
   const handleSave = async () => {
     try {
-      await updateDoc(doc(db, "events", eventId as string), {
-        title: eventData.title.trim(),
-        description: eventData.description?.trim(),
-        location: eventData.location.trim(),
-        date: eventData.date.trim(),
-        categoryId: eventData.categoryId.trim(),
-        imageUrl: eventData.imageUrl?.trim(),
-        imageDescription: eventData.imageDescription?.trim(),
-      });
+      await updateEvent(eventId, eventData);
       router.push(`/events/${eventId}`);
     } catch (e) {
       console.error("Failed to update event", e);
