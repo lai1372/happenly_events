@@ -2,7 +2,7 @@ import { db } from "@/src/core/firebase/client";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { useCallback, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, KeyboardAvoidingView } from "react-native";
 import { updateEvent } from "../../api";
 
 import {
@@ -81,6 +81,11 @@ export default function EditEvent() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
+                <KeyboardAvoidingView
+                          style={{ flex: 1 }}
+                          behavior={Platform.OS === "ios" ? "padding" : "height"}
+                          keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+                        >
         <Surface style={{ padding: 16, borderRadius: 12 }} elevation={2}>
           <Text variant="headlineSmall" style={{ marginBottom: 16 }}>
             Editing event: {eventData.title}
@@ -177,6 +182,7 @@ export default function EditEvent() {
             Save Changes
           </Button>
         </Surface>
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );

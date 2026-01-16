@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, ScrollView, View } from "react-native";
+import { Alert, Platform, ScrollView, View, KeyboardAvoidingView} from "react-native";
 import { Button, Card, Chip, Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createEvent, getAllCategories } from "./api";
@@ -82,6 +82,11 @@ export default function CreateEventScreen() {
     // Safe area to avoid notches and screen edges
     <SafeAreaView style={{ flex: 1, padding: 16 }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
+        <KeyboardAvoidingView
+                  style={{ flex: 1 }}
+                  behavior={Platform.OS === "ios" ? "padding" : "height"}
+                  keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+                >
         <Card style={{ marginHorizontal: 16 }}>
           <Card.Content style={{ gap: 12 }}>
             <Text style={{ fontSize: 22, fontWeight: "600" }}>
@@ -228,6 +233,7 @@ export default function CreateEventScreen() {
             </Button>
           </Card.Content>
         </Card>
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );

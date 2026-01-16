@@ -76,7 +76,7 @@ export default function HomeScreen() {
       <SafeAreaView>
         <Card>
           <Card.Content>
-            <Text variant="headlineSmall">What’s on in Blackpool</Text>
+            <Text variant="headlineSmall">Welcome to Happenly!</Text>
 
             <Text variant="bodyMedium">
               Discover events happening across Blackpool, UK — from live music
@@ -92,7 +92,7 @@ export default function HomeScreen() {
 
             <Divider style={{ marginVertical: 12 }} />
 
-            <Text variant="titleSmall">How it works</Text>
+            <Text variant="titleMedium">How it works</Text>
             <Text variant="bodyMedium">
               Browse categories, open the full events list, and keep an eye out
               for featured picks we highlight each week. New listings get added
