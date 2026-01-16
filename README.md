@@ -1,50 +1,77 @@
-# Welcome to your Expo app 👋
+# Happenly 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Happenly** is a mobile event discovery and management app built with **Expo** and **React Native**.  
+It allows users to browse events, create new ones, and manage event details with a clean, mobile-first experience.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features
+
+- 📅 Browse and view event details
+- ➕ Create, edit, and delete events
+- 🔌 Offline detection with user feedback
+- 🎨 Modern UI using React Native Paper
+- ☁️ Firebase Firestore integration
+- 🧪 Tested create & delete flows (including error states)
+
+---
+
+## 🛠 Tech Stack
+
+- **Expo** (React Native)
+- **Expo Router**
+- **Firebase Firestore**
+- **React Native Paper**
+- **Jest / Testing Library**
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- Node.js (LTS recommended)
+- npm or yarn
+- Expo Go installed on a Mobile device (Recommended, but not necessary)
+
+---
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/lai1372/happenly_events.git
+   cd happenly_events
+
+   ```
+
+2. **📦 Install dependencies**
 
    ```bash
    npm install
+
    ```
 
-2. Start the app
+3. **🚀 Run the Happenly app!**
 
    ```bash
    npx expo start
+
+   > ⚠️ **Important (POC Login Details)**
+   > This project uses **Firebase Authentication** for login.
+   > For proof-of-concept and testing purposes, use the following credentials:
+   >
+   > - **Email:** `john.doe@gmail.com`
+   > - **Password:** `123456`
+   >
+   > *(These credentials are for development/demo use only.)*
+
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+4. **🧪 Run the tests with Jest**
+   ```bash
+   npm test
+   ```
