@@ -2,6 +2,7 @@ import { useAuth } from "@/src/features/auth/hooks/useAuth";
 import { Redirect, Stack, router } from "expo-router";
 import React, { useState } from "react";
 import { IconButton, Menu } from "react-native-paper";
+import OfflineBanner from "../../components/offline-banner";
 
 function HamburgerMenu() {
   const [visible, setVisible] = useState(false);
@@ -63,11 +64,14 @@ export default function TabsLayout() {
 
   // If user exists, show hamburger menu
   return (
-    <Stack
-      screenOptions={{
-        headerTitle: "",
-        headerLeft: () => <HamburgerMenu />,
-      }}
-    />
+    <>
+      <OfflineBanner />
+      <Stack
+        screenOptions={{
+          headerTitle: "",
+          headerLeft: () => <HamburgerMenu />,
+        }}
+      />
+    </>
   );
 }

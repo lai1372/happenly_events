@@ -2,7 +2,7 @@ import { db } from "@/src/core/firebase/client";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import { useCallback, useState } from "react";
-import { ScrollView, KeyboardAvoidingView } from "react-native";
+import { ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { updateEvent } from "../../api";
 
 import {
