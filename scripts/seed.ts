@@ -5,7 +5,7 @@ const events = [
   {
     categoryId: "arts",
     createdAt: "17 December 2025 at 10:05:18 UTC",
-    date: "2025-07-10",
+    date: "20-02-2026",
     title: "Evening Life Drawing",
     description:
       "Life drawing session with a live model in an informal studio setting.",
@@ -18,7 +18,7 @@ const events = [
   {
     categoryId: "food_and_drink",
     createdAt: "18 December 2025 at 14:41:02 UTC",
-    date: "2025-06-22",
+    date: "09-03-2026",
     title: "Seasonal Supper",
     description: "Pop-up supper club celebrating seasonal British produce.",
     imageUrl:
@@ -29,7 +29,7 @@ const events = [
   {
     categoryId: "health_and_wellbeing",
     createdAt: "19 December 2025 at 08:19:44 UTC",
-    date: "2025-07-06",
+    date: "06-07-2026",
     title: "Slow Sunday Breathwork",
     description:
       "Guided breathwork and meditation session suitable for beginners.",
@@ -41,7 +41,7 @@ const events = [
   {
     categoryId: "music",
     createdAt: "20 December 2025 at 21:02:11 UTC",
-    date: "2025-08-01",
+    date: "01-08-2026",
     title: "New Sounds Night",
     description:
       "Intimate live gig featuring emerging indie and alternative artists.",
@@ -54,7 +54,7 @@ const events = [
   {
     categoryId: "arts",
     createdAt: "21 December 2025 at 12:56:33 UTC",
-    date: "2025-09-12",
+    date: "12-09-2026",
     title: "Cut & Paste Collage",
     description:
       "Hands-on collage workshop using found materials and print ephemera.",
