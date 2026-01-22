@@ -23,7 +23,7 @@ export default function EventDetails() {
       }
 
       if (id) loadEvent();
-    }, [id])
+    }, [id]),
   );
 
   // Handle case where event is not found, show a message on the screen
@@ -67,16 +67,16 @@ export default function EventDetails() {
       }
 
       const calendars = await Calendar.getCalendarsAsync(
-        Calendar.EntityTypes.EVENT
+        Calendar.EntityTypes.EVENT,
       );
 
       const writable = calendars.find((c) => c.allowsModifications);
       if (!writable) {
         throw new Error(
-          "No writable event calendar found. Enable an iCloud/local calendar in iOS Calendar."
+          "No writable event calendar found. Enable an iCloud/local calendar in iOS Calendar.",
         );
       }
-      const [y, m, d] = event.date.split("-").map(Number);
+      const [d, m, y] = event.date.split("-").map(Number);
 
       const start = new Date(y, m - 1, d);
 
