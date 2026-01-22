@@ -3,6 +3,7 @@ import { Redirect, Stack, router } from "expo-router";
 import React, { useState } from "react";
 import { IconButton, Menu } from "react-native-paper";
 import OfflineBanner from "../../components/offline-banner";
+import { HappenlyLogo } from "@/components/happenlyLogo";
 
 function HamburgerMenu() {
   const [visible, setVisible] = useState(false);
@@ -62,13 +63,14 @@ export default function TabsLayout() {
   // If no user found, redirect to login page
   if (!user) return <Redirect href="/login" />;
 
-  // If user exists, show hamburger menu
+  // If user exists, show hamburger menu and logo in header
   return (
     <>
       <OfflineBanner />
       <Stack
         screenOptions={{
           headerTitle: "",
+          headerRight: () => <HappenlyLogo size={32} />,
           headerLeft: () => <HamburgerMenu />,
         }}
       />
