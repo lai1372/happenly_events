@@ -47,11 +47,8 @@ export default function Login() {
           >
             <View style={{ alignItems: "center", gap: 10, paddingBottom: 6 }}>
                 <HappenlyLogo size={64} />
-                <Text variant="headlineMedium" style={{ fontWeight: "700" }}>
+                <Text variant="headlineMedium" style={{ fontWeight: "700", color: "#6200ee", paddingBottom: 15 }}>
                   Happenly
-                </Text>
-                <Text variant="bodyMedium" style={{ opacity: 0.7 }}>
-                  Sign in to continue
                 </Text>
               </View>
             <Card>
