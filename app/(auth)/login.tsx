@@ -1,9 +1,12 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
-import { Button, Card, HelperText, TextInput } from "react-native-paper";
+import { Button, Card, HelperText, TextInput, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { login } from "./api";
+import { LinearGradient } from "expo-linear-gradient";
+import { HappenlyLogo } from "@/components/happenlyLogo";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,6 +30,7 @@ export default function Login() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+
       <View style={{ flex: 1, padding: 16, justifyContent: "center" }}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
@@ -41,6 +45,12 @@ export default function Login() {
             }}
             keyboardShouldPersistTaps="handled"
           >
+            <View style={{ alignItems: "center", gap: 10, paddingBottom: 6 }}>
+                <HappenlyLogo size={64} />
+                <Text variant="headlineMedium" style={{ fontWeight: "700", color: "#6200ee", paddingBottom: 15 }}>
+                  Happenly
+                </Text>
+              </View>
             <Card>
               <Card.Title
                 title="Sign in"
