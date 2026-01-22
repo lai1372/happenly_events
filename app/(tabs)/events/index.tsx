@@ -35,6 +35,13 @@ export default function EventsList() {
     // Safe area to avoid notches and screen edges
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
+        <Text
+          variant="headlineMedium"
+          accessibilityLabel="Page title: Upcoming Events"
+          style={{ fontWeight: "700", color: "#6200ee", marginBottom: 16, marginLeft: 20 }}
+        >
+          Upcoming Events
+        </Text>
         {events.map((event) => (
           <Card key={event.id} style={{ margin: 10 }}>
             <Card.Title title={event.title} titleVariant="titleLarge" />
